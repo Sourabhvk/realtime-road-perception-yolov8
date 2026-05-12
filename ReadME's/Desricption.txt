@@ -1,0 +1,27 @@
+PROJECT TITLE:
+Real-Time Road Object Detection and Tracking using YOLOv8
+
+HARDWARE CONTEXT:
+Local laptop:
+- CPU: Intel i7 7th Gen
+- GPU: NVIDIA GTX 1050 Ti
+- Expected use: setup, debugging, small tests, inference, README visuals
+
+RWTH HPC:
+- Expected use: actual model training, longer experiments, YOLOv8n vs YOLOv8s comparison
+
+MAIN STRATEGY:
+Do not train seriously on the laptop.
+Use the laptop for:
+- environment setup
+- dataset inspection
+- small 20–50 image test runs
+- inference checks
+- FPS benchmarking on local hardware
+- tracking demos
+
+Use RWTH HPC for:
+- full training
+- validation
+- model comparison
+- longer experiments

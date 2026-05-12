@@ -1,0 +1,650 @@
+STEP-BY-STEP PLAN
+
+PHASE 1 — LOCAL PROJECT SETUP
+
+Step 1: Create project folder
+
+mkdir road-scene-yolov8-tracking
+cd road-scene-yolov8-tracking
+
+
+Step 2: Create Python virtual environment
+
+python -m venv venv
+
+
+Step 3: Activate environment
+
+Windows:
+
+venv\Scripts\activate
+
+Linux/Mac:
+
+source venv/bin/activate
+
+
+Step 4: Install dependencies locally
+
+pip install ultralytics opencv-python numpy pandas matplotlib scikit-learn tqdm
+
+
+Step 5: Check YOLO installation
+
+yolo version
+
+
+Step 6: Check GPU availability locally
+
+python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'No CUDA GPU')"
+
+
+Step 7: Create project folder structure
+
+mkdir data scripts outputs notebooks models
+mkdir outputs/images outputs/videos outputs/plots outputs/failure_cases
+
+
+Step 8: Save dependencies
+
+pip freeze > requirements.txt
+
+
+Expected structure:
+
+road-scene-yolov8-tracking/
+├── data/
+├── scripts/
+├── models/
+├── outputs/
+│   ├── images/
+│   ├── videos/
+│   ├── plots/
+│   └── failure_cases/
+├── notebooks/
+├── README.md
+└── requirements.txt
+
+
+PHASE 2 — DATASET CHOICE
+
+Step 9: Choose dataset
+
+Recommended option:
+KITTI Object Detection Dataset
+
+Reason:
+- relevant to autonomous driving/perception
+- good credibility
+- contains cars, pedestrians, cyclists
+- useful for NEURA/Mercedes-style positioning
+
+Faster option:
+Roboflow road-scene dataset already in YOLO format
+
+Reason:
+- saves annotation conversion time
+- faster to finish
+- less impressive than KITTI but still usable
+
+
+Step 10: Final recommendation
+
+Use KITTI if setup time is manageable.
+Use Roboflow only if KITTI conversion becomes a time sink.
+
+
+PHASE 3 — DATASET STRUCTURE
+
+Step 11: Prepare YOLO-format dataset
+
+Final dataset should look like this:
+
+data/
+└── road_dataset/
+    ├── images/
+    │   ├── train/
+    │   └── val/
+    ├── labels/
+    │   ├── train/
+    │   └── val/
+    └── data.yaml
+
+
+Step 12: Create data.yaml
+
+Example:
+
+path: data/road_dataset
+train: images/train
+val: images/val
+
+names:
+  0: car
+  1: pedestrian
+  2: cyclist
+
+
+Step 13: If using KITTI
+
+Convert KITTI labels to YOLO format.
+
+KITTI labels contain:
+- class name
+- bbox_left
+- bbox_top
+- bbox_right
+- bbox_bottom
+
+YOLO labels require:
+- class_id
+- x_center_normalized
+- y_center_normalized
+- width_normalized
+- height_normalized
+
+
+Step 14: Keep only needed KITTI classes
+
+Use:
+- Car → car
+- Pedestrian → pedestrian
+- Cyclist → cyclist
+
+Ignore:
+- Van
+- Truck
+- Tram
+- Misc
+- DontCare
+
+Optional:
+Map Van/Truck also to car if you want more vehicle examples, but mention this clearly in README.
+
+
+PHASE 4 — LOCAL SANITY CHECK
+
+Step 15: Test pretrained YOLOv8 locally
+
+yolo predict model=yolov8n.pt source=data/road_dataset/images/val save=True
+
+
+Step 16: Create quick local test script
+
+Create:
+
+scripts/test_inference.py
+
+Content:
+
+from ultralytics import YOLO
+
+model = YOLO("yolov8n.pt")
+
+results = model.predict(
+    source="data/road_dataset/images/val",
+    save=True,
+    conf=0.25
+)
+
+
+Step 17: Run local inference test
+
+python scripts/test_inference.py
+
+
+Step 18: Local rule
+
+Only use local machine for quick tests.
+Do not waste time doing full 50-epoch training locally on GTX 1050 Ti.
+
+
+PHASE 5 — CREATE SMALL DEBUG DATASET
+
+Step 19: Create a small dataset subset
+
+Create:
+- 50 training images
+- 20 validation images
+
+Purpose:
+- confirm data.yaml works
+- confirm labels are correct
+- confirm YOLO training starts
+- catch path/format errors before using HPC
+
+
+Expected structure:
+
+data/
+└── road_dataset_debug/
+    ├── images/
+    │   ├── train/
+    │   └── val/
+    ├── labels/
+    │   ├── train/
+    │   └── val/
+    └── data.yaml
+
+
+Step 20: Run tiny local training test
+
+yolo detect train model=yolov8n.pt data=data/road_dataset_debug/data.yaml epochs=2 imgsz=640 batch=4 device=0
+
+
+Step 21: If local GPU memory fails
+
+Use CPU or smaller image size:
+
+yolo detect train model=yolov8n.pt data=data/road_dataset_debug/data.yaml epochs=2 imgsz=416 batch=2 device=cpu
+
+
+Step 22: Confirm training produces output
+
+Check:
+
+runs/detect/train/weights/best.pt
+
+
+PHASE 6 — PREPARE HPC TRANSFER
+
+Step 23: Clean project before transferring to HPC
+
+Keep:
+- scripts/
+- data/
+- requirements.txt
+- README.md
+
+Avoid transferring:
+- unnecessary videos
+- duplicate runs
+- cache files
+- venv folder
+
+Do not upload venv to HPC.
+
+
+Step 24: Create compressed dataset/project package if needed
+
+tar -czf road_yolo_project.tar.gz road-scene-yolov8-tracking/
+
+
+Step 25: Transfer to HPC
+
+Use RWTH HPC transfer method.
+
+Example structure on HPC:
+
+~/projects/road-scene-yolov8-tracking/
+
+
+PHASE 7 — HPC ENVIRONMENT SETUP
+
+Step 26: Login to HPC
+
+ssh your_rwth_hpc_login
+
+
+Step 27: Go to project folder
+
+cd ~/projects/road-scene-yolov8-tracking
+
+
+Step 28: Load required modules
+
+Exact module names depend on RWTH HPC.
+
+Typical idea:
+
+module avail python
+module avail cuda
+module avail gcc
+
+Then load suitable versions, for example:
+
+module load Python
+module load CUDA
+
+
+Step 29: Create HPC virtual environment
+
+python -m venv venv
+source venv/bin/activate
+
+
+Step 30: Install dependencies on HPC
+
+pip install --upgrade pip
+pip install ultralytics opencv-python-headless numpy pandas matplotlib scikit-learn tqdm
+
+
+Important:
+Use opencv-python-headless on HPC instead of opencv-python because HPC usually has no display GUI.
+
+
+Step 31: Check CUDA on HPC
+
+python -c "import torch; print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'No CUDA GPU')"
+
+
+PHASE 8 — HPC TRAINING
+
+Step 32: Train YOLOv8n on HPC
+
+yolo detect train model=yolov8n.pt data=data/road_dataset/data.yaml epochs=50 imgsz=640 batch=16 device=0 project=runs name=yolov8n_road
+
+
+Step 33: If GPU memory issue occurs
+
+Reduce batch size:
+
+yolo detect train model=yolov8n.pt data=data/road_dataset/data.yaml epochs=50 imgsz=640 batch=8 device=0 project=runs name=yolov8n_road
+
+
+Step 34: If training is slow but stable
+
+Continue. YOLOv8n is the minimum required model.
+
+
+Step 35: Train YOLOv8s on HPC if time allows
+
+yolo detect train model=yolov8s.pt data=data/road_dataset/data.yaml epochs=50 imgsz=640 batch=16 device=0 project=runs name=yolov8s_road
+
+
+Step 36: If YOLOv8s has memory issues
+
+Reduce batch:
+
+yolo detect train model=yolov8s.pt data=data/road_dataset/data.yaml epochs=50 imgsz=640 batch=8 device=0 project=runs name=yolov8s_road
+
+
+Step 37: Copy final models into models folder
+
+mkdir -p models
+
+cp runs/yolov8n_road/weights/best.pt models/yolov8n_road_best.pt
+cp runs/yolov8s_road/weights/best.pt models/yolov8s_road_best.pt
+
+
+PHASE 9 — HPC VALIDATION
+
+Step 38: Validate YOLOv8n
+
+yolo detect val model=models/yolov8n_road_best.pt data=data/road_dataset/data.yaml imgsz=640 device=0
+
+
+Step 39: Validate YOLOv8s
+
+yolo detect val model=models/yolov8s_road_best.pt data=data/road_dataset/data.yaml imgsz=640 device=0
+
+
+Step 40: Save metrics
+
+Collect:
+- mAP50
+- mAP50-95
+- precision
+- recall
+
+YOLO also generates:
+- confusion matrix
+- PR curve
+- F1 curve
+- results plots
+
+Save/copy these into:
+
+outputs/plots/
+
+
+PHASE 10 — LOCAL INFERENCE AND DEMO
+
+Step 41: Bring trained models back to local laptop
+
+Copy from HPC:
+
+models/yolov8n_road_best.pt
+models/yolov8s_road_best.pt
+
+to local:
+
+models/
+
+
+Step 42: Run local image inference
+
+yolo predict model=models/yolov8n_road_best.pt source=data/road_dataset/images/val save=True conf=0.25
+
+
+Step 43: Add demo video
+
+Place video here:
+
+data/demo_video.mp4
+
+
+Step 44: Run local video inference
+
+yolo predict model=models/yolov8n_road_best.pt source=data/demo_video.mp4 save=True conf=0.25
+
+
+PHASE 11 — TRACKING
+
+Step 45: Run ByteTrack locally
+
+yolo track model=models/yolov8n_road_best.pt source=data/demo_video.mp4 tracker=bytetrack.yaml save=True conf=0.25
+
+
+Step 46: Run tracking for YOLOv8s if available
+
+yolo track model=models/yolov8s_road_best.pt source=data/demo_video.mp4 tracker=bytetrack.yaml save=True conf=0.25
+
+
+Step 47: Save tracking output
+
+Copy final video from:
+
+runs/detect/track/
+
+to:
+
+outputs/videos/
+
+
+PHASE 12 — FPS BENCHMARK
+
+Step 48: Create FPS benchmark script
+
+Create:
+
+scripts/benchmark_fps.py
+
+Content:
+
+import time
+import cv2
+from ultralytics import YOLO
+
+MODEL_PATH = "models/yolov8n_road_best.pt"
+VIDEO_PATH = "data/demo_video.mp4"
+
+model = YOLO(MODEL_PATH)
+cap = cv2.VideoCapture(VIDEO_PATH)
+
+frame_count = 0
+start_time = time.time()
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    model.predict(frame, conf=0.25, verbose=False)
+    frame_count += 1
+
+end_time = time.time()
+cap.release()
+
+elapsed = end_time - start_time
+fps = frame_count / elapsed
+
+print(f"Frames processed: {frame_count}")
+print(f"Time elapsed: {elapsed:.2f} seconds")
+print(f"FPS: {fps:.2f}")
+
+
+Step 49: Benchmark YOLOv8n locally
+
+python scripts/benchmark_fps.py
+
+
+Step 50: Benchmark YOLOv8s locally
+
+Change:
+
+MODEL_PATH = "models/yolov8n_road_best.pt"
+
+to:
+
+MODEL_PATH = "models/yolov8s_road_best.pt"
+
+Run:
+
+python scripts/benchmark_fps.py
+
+
+Step 51: Record FPS table
+
+Example:
+
+| Model | Hardware | FPS | Notes |
+|---|---:|---:|---|
+| YOLOv8n | i7 7th Gen + GTX 1050 Ti | TBD | Local inference |
+| YOLOv8s | i7 7th Gen + GTX 1050 Ti | TBD | Local inference |
+
+
+PHASE 13 — FAILURE ANALYSIS
+
+Step 52: Find failure examples
+
+Look for:
+- missed small pedestrians
+- cyclists confused with pedestrians
+- occluded cars
+- far-away vehicles
+- false positives on signs/poles
+- crowded scenes
+
+
+Step 53: Save 5–8 failure examples
+
+Save to:
+
+outputs/failure_cases/
+
+
+Step 54: Write failure analysis
+
+Example:
+
+The detector performed well on clearly visible vehicles but struggled with small pedestrians and cyclists at long range.
+YOLOv8s improved recall compared to YOLOv8n but reduced FPS on the local GTX 1050 Ti.
+Most failure cases involved occlusion, small object size, and class similarity between pedestrians and cyclists.
+
+
+PHASE 14 — README
+
+Step 55: README structure
+
+# Real-Time Road Object Detection and Tracking using YOLOv8
+
+## Objective
+
+## Hardware Used
+
+Local:
+- Intel i7 7th Gen
+- NVIDIA GTX 1050 Ti
+
+Training:
+- RWTH HPC GPU resources
+
+## Dataset
+
+## Classes
+
+## Tech Stack
+
+## Methodology
+
+## Training Setup
+
+## Evaluation Metrics
+
+## Results
+
+## FPS Benchmark
+
+## Tracking Demo
+
+## Failure Cases
+
+## Limitations
+
+## Next Steps
+
+
+Step 56: Add results table
+
+| Model | mAP50 | mAP50-95 | Precision | Recall | Local FPS |
+|---|---:|---:|---:|---:|---:|
+| YOLOv8n | TBD | TBD | TBD | TBD | TBD |
+| YOLOv8s | TBD | TBD | TBD | TBD | TBD |
+
+
+Step 57: Add visuals
+
+Include:
+- detection sample
+- tracking screenshot
+- tracking video/GIF
+- confusion matrix
+- PR curve
+- F1 curve
+- failure cases
+
+
+PHASE 15 — FINAL CV BULLETS
+
+Step 58: Main CV bullet
+
+Fine-tuned YOLOv8n/YOLOv8s on road-scene data for car, pedestrian, and cyclist detection, integrated ByteTrack-based object tracking, and benchmarked mAP, precision/recall, F1, and FPS for real-time perception.
+
+
+Step 59: Second CV bullet
+
+Used RWTH HPC resources for model training and validation, while benchmarking local inference performance on an i7/GTX 1050 Ti setup to analyze accuracy–latency trade-offs for deployment-oriented model selection.
+
+
+Step 60: Third optional CV bullet
+
+Analyzed failure cases involving occlusion, small objects, and pedestrian/cyclist class confusion, documenting practical limitations and improvement directions for road-scene perception.
+
+
+MINIMUM SUCCESSFUL VERSION
+
+Must complete:
+1. Dataset prepared in YOLO format
+2. YOLOv8n trained on HPC
+3. Validation metrics collected
+4. Local FPS benchmark completed
+5. ByteTrack demo video generated
+6. README with results and screenshots
+
+Nice-to-have:
+1. YOLOv8s comparison
+2. Failure case section
+3. PR curve and confusion matrix
+4. GIF demo
+5. Clean LinkedIn post or GitHub pinned repo
