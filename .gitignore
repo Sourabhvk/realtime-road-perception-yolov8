@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
+data/
+*.zip
+*.tar
+*.tar.gz
+
+# Models / weights
+*.pt
+*.onnx
+*.engine
+
+# Outputs
+runs/
+outputs/videos/
+outputs/images/
+outputs/plots/
+outputs/failure_cases/
+
+# VS Code
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db
