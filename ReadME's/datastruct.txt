@@ -1,0 +1,31 @@
+yolo
+│
+├── .venv/
+├── data/
+│   ├── kitti_raw/
+│   │
+│   └── road_dataset/
+│       ├── images/
+│       │   ├── train/
+│       │   └── val/
+│       │
+│       └── labels/
+│           ├── train/
+│           └── val/
+│
+├── models/
+│
+├── notebooks/
+│
+├── outputs/
+│   ├── failure_cases/
+│   ├── images/
+│   ├── plots/
+│   └── videos/
+│
+├── scripts/
+│
+├── .gitignore
+├── LICENSE
+├── README.md
+└── requirements.txt

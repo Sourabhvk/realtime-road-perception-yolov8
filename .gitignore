@@ -1,33 +1,74 @@
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyd
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
 .venv/
 venv/
+env/
+ENV/
+.python-version
+
+# Python test and lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
 
 # Jupyter
 .ipynb_checkpoints/
 
-# Data
-data/
-*.zip
-*.tar
-*.tar.gz
+# Dataset and local media
+data/kitti_raw/
+data/road_dataset/
+data/*.zip
+data/*.tar
+data/*.tar.gz
+data/*.tgz
+data/*.7z
+data/*.mp4
+data/*.avi
+data/*.mov
+data/*.mkv
+data/*.gif
 
 # Models / weights
+models/*
+!models/.gitkeep
 *.pt
+*.pth
+*.ckpt
 *.onnx
 *.engine
+*.weights
+*.pb
+*.tflite
 
-# Outputs
+# Training / experiment outputs
 runs/
-outputs/videos/
-outputs/images/
-outputs/plots/
-outputs/failure_cases/
+wandb/
+mlruns/
+lightning_logs/
+tensorboard/
+outputs/*
+!outputs/.gitkeep
 
-# VS Code
+# VS Code and IDEs
 .vscode/
+.idea/
 
-# System
+# System files
 .DS_Store
 Thumbs.db
+Desktop.ini
