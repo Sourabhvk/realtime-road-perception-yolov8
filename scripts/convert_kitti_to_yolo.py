@@ -9,11 +9,11 @@ from __future__ import annotations
 
 import random
 import shutil
+import sys
 from pathlib import Path
 
 import cv2
 from tqdm import tqdm
-
 
 CLASS_MAP = {
 	"Car": 0,
@@ -78,6 +78,9 @@ def parse_kitti_label_file(
 			try:
 				left, top, right, bottom = map(float, parts[4:8])
 			except ValueError:
+				continue
+
+			if right <= left or bottom <= top:
 				continue
 
 			x_center, y_center, width, height = convert_bbox_to_yolo(
@@ -163,19 +166,23 @@ def main() -> None:
 				print(f"Skipping {label_path.name}: matching image not found")
 				continue
 
-			image = cv2.imread(str(image_path))
-			if image is None:
-				print(f"Skipping {image_path.name}: unable to read image")
+			try:
+				image = cv2.imread(str(image_path))
+				if image is None:
+					print(f"Skipping {image_path.name}: unable to read image")
+					continue
+
+				image_height, image_width = image.shape[:2]
+				yolo_lines = parse_kitti_label_file(label_path, image_width, image_height)
+
+				shutil.copy2(image_path, image_output_dir / image_path.name)
+				(label_output_dir / f"{label_path.stem}.txt").write_text(
+					"\n".join(yolo_lines) + ("\n" if yolo_lines else ""),
+					encoding="utf-8",
+				)
+			except (OSError, UnicodeDecodeError, cv2.error) as exc:
+				print(f"Skipping {label_path.name}: {exc}", file=sys.stderr)
 				continue
-
-			image_height, image_width = image.shape[:2]
-			yolo_lines = parse_kitti_label_file(label_path, image_width, image_height)
-
-			shutil.copy2(image_path, image_output_dir / image_path.name)
-			(label_output_dir / f"{label_path.stem}.txt").write_text(
-				"\n".join(yolo_lines) + ("\n" if yolo_lines else ""),
-				encoding="utf-8",
-			)
 
 			total_images_processed += 1
 			split_counts[split_name] += 1
@@ -188,4 +195,11 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-	main()
+	try:
+		main()
+	except (FileNotFoundError, OSError, cv2.error) as exc:
+		print(f"Conversion failed: {exc}", file=sys.stderr)
+		sys.exit(1)
+	except KeyboardInterrupt:
+		print("Conversion cancelled by user.", file=sys.stderr)
+		sys.exit(130)
