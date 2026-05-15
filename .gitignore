@@ -31,7 +31,8 @@ htmlcov/
 
 # Dataset and local media
 data/kitti_raw/
-data/road_dataset/
+data/road_dataset/*
+!data/road_dataset/data.yaml
 data/*.zip
 data/*.tar
 data/*.tar.gz
