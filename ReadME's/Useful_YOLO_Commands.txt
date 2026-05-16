@@ -1,0 +1,89 @@
+Useful YOLO Commands
+====================
+
+Project folder:
+S:\Project\yolo
+
+1. Activate Python virtual environment
+--------------------------------------
+.\.venv\Scripts\activate
+
+2. Install required packages
+----------------------------
+pip install -r requirements.txt
+
+3. Check GPU availability
+-------------------------
+nvidia-smi
+
+4. Train YOLOv8 nano on road dataset
+------------------------------------
+yolo detect train data=data/road_dataset/data.yaml model=yolov8n.pt epochs=3 imgsz=640 batch=4 device=0
+
+5. Train for more epochs
+------------------------
+yolo detect train data=data/road_dataset/data.yaml model=yolov8n.pt epochs=50 imgsz=640 batch=4 device=0
+
+6. Train using CPU
+------------------
+yolo detect train data=data/road_dataset/data.yaml model=yolov8n.pt epochs=3 imgsz=640 batch=4 device=cpu
+
+7. Resume interrupted training
+------------------------------
+yolo detect train resume=True
+
+8. Validate trained model
+-------------------------
+yolo detect val model=runs/detect/train/weights/best.pt data=data/road_dataset/data.yaml imgsz=640 device=0
+
+9. Run detection on an image
+---------------------------
+yolo detect predict model=runs/detect/train/weights/best.pt source=data/road_dataset/images/val imgsz=640 conf=0.25 save=True
+
+10. Run detection on a single image
+-----------------------------------
+yolo detect predict model=runs/detect/train/weights/best.pt source=path/to/image.jpg imgsz=640 conf=0.25 save=True
+
+11. Run detection on a video
+----------------------------
+yolo detect predict model=runs/detect/train/weights/best.pt source=path/to/video.mp4 imgsz=640 conf=0.25 save=True
+
+12. Run detection using webcam
+------------------------------
+yolo detect predict model=runs/detect/train/weights/best.pt source=0 imgsz=640 conf=0.25 show=True
+
+13. Export trained model to ONNX
+--------------------------------
+yolo export model=runs/detect/train/weights/best.pt format=onnx
+
+14. Export trained model to TorchScript
+---------------------------------------
+yolo export model=runs/detect/train/weights/best.pt format=torchscript
+
+15. Open training results folder
+--------------------------------
+explorer runs\detect
+
+16. View training logs with TensorBoard
+--------------------------------------
+tensorboard --logdir runs
+
+17. Common useful options
+-------------------------
+epochs=3       Number of training rounds.
+imgsz=640      Image size used for training or prediction.
+batch=4        Number of images processed at once.
+device=0       Use GPU 0.
+device=cpu     Use CPU.
+conf=0.25      Confidence threshold for predictions.
+save=True      Save prediction output files.
+show=True      Show live prediction window.
+
+18. Example full workflow
+-------------------------
+.\.venv\Scripts\activate
+pip install -r requirements.txt
+yolo detect train data=data/road_dataset/data.yaml model=yolov8n.pt epochs=3 imgsz=640 batch=4 device=0
+yolo detect val model=runs/detect/train/weights/best.pt data=data/road_dataset/data.yaml imgsz=640 device=0
+yolo detect predict model=runs/detect/train/weights/best.pt source=data/road_dataset/images/val imgsz=640 conf=0.25 save=True
+
