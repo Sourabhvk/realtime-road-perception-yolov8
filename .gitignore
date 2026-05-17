@@ -69,6 +69,10 @@ outputs/*
 .vscode/
 .idea/
 
+# Local launchers
+launch_yolo_workspace.ps1
+launch_yolo_workspace.bat
+
 # System files
 .DS_Store
 Thumbs.db
