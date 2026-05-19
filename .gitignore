@@ -30,8 +30,14 @@ htmlcov/
 .ipynb_checkpoints/
 
 # Data
-data/kitti_raw/
-data/road_dataset/*
+data/kitti_raw/**
+!data/kitti_raw/
+!data/kitti_raw/**/
+!data/kitti_raw/**/.gitkeep
+data/road_dataset/**
+!data/road_dataset/
+!data/road_dataset/**/
+!data/road_dataset/**/.gitkeep
 !data/road_dataset/data.yaml
 *.zip
 *.tar
@@ -40,7 +46,8 @@ data/road_dataset/*
 *.7z
 
 # Models / weights
-models/*
+models/**
+!models/
 !models/.gitkeep
 *.pt
 *.pth
@@ -52,12 +59,18 @@ models/*
 *.tflite
 
 # Training / experiment artifacts
-runs/
+runs/**
+!runs/
+!runs/**/
+!runs/**/.gitkeep
 wandb/
 mlruns/
 lightning_logs/
 tensorboard/
-outputs/*
+outputs/**
+!outputs/
+!outputs/**/
+!outputs/**/.gitkeep
 !outputs/.gitkeep
 *.mp4
 *.avi
