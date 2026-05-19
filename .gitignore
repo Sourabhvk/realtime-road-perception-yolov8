@@ -64,6 +64,7 @@ outputs/*
 *.mov
 *.mkv
 *.gif
+tmp/
 
 # VS Code and IDEs
 .vscode/
