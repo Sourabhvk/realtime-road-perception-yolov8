@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=yolo_train
-#SBATCH --output=runs/slurm/%x-%j.out
-#SBATCH --error=runs/slurm/%x-%j.err
+#SBATCH --output=/hpcwork/niy86040/road-scene-yolov8/runs/slurm/%x-%j.out
+#SBATCH --error=/hpcwork/niy86040/road-scene-yolov8/runs/slurm/%x-%j.err
 #SBATCH --time=12:00:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
