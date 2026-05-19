@@ -50,6 +50,7 @@ models/**
 !models/
 !models/.gitkeep
 *.pt
+!yolov8n.pt
 *.pth
 *.ckpt
 *.onnx
