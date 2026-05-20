@@ -29,21 +29,23 @@ htmlcov/
 # Jupyter
 .ipynb_checkpoints/
 
-# Data
-data/kitti_raw/**
-!data/kitti_raw/
-!data/kitti_raw/**/
-!data/kitti_raw/**/.gitkeep
-data/road_dataset/**
-!data/road_dataset/
-!data/road_dataset/**/
-!data/road_dataset/**/.gitkeep
-!data/road_dataset/data.yaml
+# Data archives and raw/converted datasets
 *.zip
 *.tar
 *.tar.gz
 *.tgz
 *.7z
+
+data/kitti_raw/**
+!data/kitti_raw/
+!data/kitti_raw/**/
+!data/kitti_raw/**/.gitkeep
+
+data/road_dataset/**
+!data/road_dataset/
+!data/road_dataset/**/
+!data/road_dataset/**/.gitkeep
+!data/road_dataset/data.yaml
 
 # Models / weights
 models/**
@@ -51,6 +53,7 @@ models/**
 !models/.gitkeep
 *.pt
 !yolov8n.pt
+!yolov8s.pt
 *.pth
 *.ckpt
 *.onnx
@@ -68,11 +71,12 @@ wandb/
 mlruns/
 lightning_logs/
 tensorboard/
+
+# Generated outputs and media
 outputs/**
 !outputs/
 !outputs/**/
 !outputs/**/.gitkeep
-!outputs/.gitkeep
 *.mp4
 *.avi
 *.mov

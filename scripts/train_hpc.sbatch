@@ -65,6 +65,9 @@ BATCH="${BATCH:-16}"
 RUN_NAME="${RUN_NAME:-yolov8n_road}"
 WORKERS="${WORKERS:-${SLURM_CPUS_PER_TASK:-4}}"
 SAVE_PERIOD="${SAVE_PERIOD:-5}"
+COS_LR="${COS_LR:-False}"
+LR0="${LR0:-0.01}"
+LRF="${LRF:-0.01}"
 
 resolve_path() {
     case "$1" in
@@ -105,6 +108,7 @@ train_labels=$(find "$PROJECT_ROOT/data/road_dataset/labels/train" -type f | wc 
 val_labels=$(find "$PROJECT_ROOT/data/road_dataset/labels/val" -type f | wc -l)
 
 echo "Dataset counts: train_images=$train_images val_images=$val_images train_labels=$train_labels val_labels=$val_labels"
+echo "Training config: model=$MODEL_PATH epochs=$EPOCHS imgsz=$IMGSZ batch=$BATCH workers=$WORKERS cos_lr=$COS_LR lr0=$LR0 lrf=$LRF run_name=$RUN_NAME"
 
 if [ "$train_images" -eq 0 ] || [ "$val_images" -eq 0 ] || [ "$train_images" -ne "$train_labels" ] || [ "$val_images" -ne "$val_labels" ]; then
     echo "Dataset image/label counts are invalid."
@@ -124,5 +128,8 @@ yolo detect train \
     device=0 \
     workers="$WORKERS" \
     save_period="$SAVE_PERIOD" \
+    cos_lr="$COS_LR" \
+    lr0="$LR0" \
+    lrf="$LRF" \
     project="$RUNS_DIR" \
     name="$RUN_NAME"
