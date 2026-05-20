@@ -1033,6 +1033,8 @@ It is a building block used inside YOLOv8.
 
 It replaced older C3-style blocks used in YOLOv5-like architectures.
 
+![alt text](image.png)
+
 ## 13.2 Why C2f exists
 
 A good object detector needs:
