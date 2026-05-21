@@ -1,3 +1,5 @@
+# Purpose: dataset sanity check before training.
+
 from pathlib import Path
 import cv2
 

@@ -1,5 +1,0 @@
-Fine-tuned YOLOv8n/YOLOv8s on road-scene data for car, pedestrian, and cyclist detection, integrated ByteTrack-based object tracking, and benchmarked mAP, precision/recall, F1, and FPS for real-time perception.
-
-Used RWTH HPC resources for model training and validation, while benchmarking local inference performance on an i7/GTX 1050 Ti setup to analyze accuracy-latency trade-offs for deployment-oriented model selection.
-
-Analyzed failure cases involving occlusion, small objects, and pedestrian/cyclist class confusion, documenting practical limitations and improvement directions for road-scene perception.
