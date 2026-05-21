@@ -47,6 +47,10 @@ data/road_dataset/**
 !data/road_dataset/**/.gitkeep
 !data/road_dataset/data.yaml
 
+data/Videos/**
+!data/Videos/
+!data/Videos/.gitkeep
+
 # Models / weights
 models/**
 !models/
@@ -77,6 +81,8 @@ outputs/**
 !outputs/
 !outputs/**/
 !outputs/**/.gitkeep
+!outputs/HPC_R1_v8n/
+!outputs/HPC_R1_v8n/**
 *.mp4
 *.avi
 *.mov

@@ -15,7 +15,6 @@ yolo
 │
 ├── models/
 │
-├── notebooks/
 │
 ├── outputs/
 │   ├── failure_cases/
