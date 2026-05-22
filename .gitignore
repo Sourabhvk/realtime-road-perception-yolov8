@@ -29,6 +29,9 @@ htmlcov/
 # Jupyter
 .ipynb_checkpoints/
 
+# Local study notes
+Documents/ml_nn_cv_yolov8_study_notes.md
+
 # Data archives and raw/converted datasets
 *.zip
 *.tar
@@ -77,12 +80,22 @@ lightning_logs/
 tensorboard/
 
 # Generated outputs and media
-outputs/**
+outputs/**/*.pt
+outputs/**/*.pth
+outputs/**/*.ckpt
+outputs/**/*.onnx
+outputs/**/*.engine
+outputs/**/*.weights
+outputs/**/*.pb
+outputs/**/*.tflite
+outputs/**/*.mp4
+outputs/**/*.avi
+outputs/**/*.mov
+outputs/**/*.mkv
+outputs/**/*.gif
 !outputs/
 !outputs/**/
 !outputs/**/.gitkeep
-!outputs/HPC_R1_v8n/
-!outputs/HPC_R1_v8n/**
 *.mp4
 *.avi
 *.mov

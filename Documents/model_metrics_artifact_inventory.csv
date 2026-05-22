@@ -1,0 +1,28 @@
+run,file,type,size_kb,purpose
+yolov8n_b16_default,v8n_b16_BoxF1_curve.png,plot,183.5,F1-confidence curve
+yolov8n_b16_default,v8n_b16_BoxP_curve.png,plot,150.2,precision-confidence curve
+yolov8n_b16_default,v8n_b16_BoxPR_curve.png,plot,149.0,precision-recall curve
+yolov8n_b16_default,v8n_b16_BoxR_curve.png,plot,174.9,recall-confidence curve
+yolov8n_b16_default,v8n_b16_confusion_matrix_normalized.png,plot,131.0,normalized confusion matrix
+yolov8n_b16_default,v8n_b16_confusion_matrix.png,plot,133.2,raw confusion matrix
+yolov8n_b16_default,v8n_b16_labels.jpg,plot,112.5,label distribution visualization
+yolov8n_b16_default,v8n_b16_results.csv,data,6.3,per-epoch training metrics
+yolov8n_b16_default,v8n_b16_results.png,plot,294.8,training curves overview
+yolov8s_b16_default,v8s_b16_BoxF1_curve.png,plot,177.8,F1-confidence curve
+yolov8s_b16_default,v8s_b16_BoxP_curve.png,plot,143.4,precision-confidence curve
+yolov8s_b16_default,v8s_b16_BoxPR_curve.png,plot,138.4,precision-recall curve
+yolov8s_b16_default,v8s_b16_BoxR_curve.png,plot,169.3,recall-confidence curve
+yolov8s_b16_default,v8s_b16_confusion_matrix_normalized.png,plot,135.7,normalized confusion matrix
+yolov8s_b16_default,v8s_b16_confusion_matrix.png,plot,129.6,raw confusion matrix
+yolov8s_b16_default,v8s_b16_labels.jpg,plot,112.5,label distribution visualization
+yolov8s_b16_default,v8s_b16_results.csv,data,6.3,per-epoch training metrics
+yolov8s_b16_default,v8s_b16_results.png,plot,277.4,training curves overview
+yolov8s_b32_cos,v8s_b32_cos_BoxF1_curve.png,plot,178.7,F1-confidence curve
+yolov8s_b32_cos,v8s_b32_cos_BoxP_curve.png,plot,142.5,precision-confidence curve
+yolov8s_b32_cos,v8s_b32_cos_BoxPR_curve.png,plot,138.1,precision-recall curve
+yolov8s_b32_cos,v8s_b32_cos_BoxR_curve.png,plot,167.5,recall-confidence curve
+yolov8s_b32_cos,v8s_b32_cos_confusion_matrix_normalized.png,plot,131.0,normalized confusion matrix
+yolov8s_b32_cos,v8s_b32_cos_confusion_matrix.png,plot,132.1,raw confusion matrix
+yolov8s_b32_cos,v8s_b32_cos_labels.jpg,plot,112.5,label distribution visualization
+yolov8s_b32_cos,v8s_b32_cos_results.csv,data,6.3,per-epoch training metrics
+yolov8s_b32_cos,v8s_b32_cos_results.png,plot,278.2,training curves overview
